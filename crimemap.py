@@ -1,5 +1,10 @@
-from dbhelper import DBHelper
+import dbconfig
 from flask import Flask, render_template, request
+
+if dbconfig.test:
+    from mockdbhelper import MockDBHelper as DBHelper
+else:
+    from dbhelper import DBHelper
 
 app = Flask(__name__)
 
@@ -33,9 +38,12 @@ def clear():
 
 
 if __name__ == '__main__':
-    import os
-    host = os.environ.get('IP','82.196.12.230')
-    #port = int(os.environ.get('host','8080'))
-    app.run(port=5000, debug=True,host=host)
+    if not dbconfig.test:
+        import os
+        host = os.environ.get('IP','82.196.12.230')
+        #port = int(os.environ.get('host','8080'))
+        app.run(port=5000, debug=True,host=host)
+    else:
+        app.run(debug=True, port=5000)
 
 
