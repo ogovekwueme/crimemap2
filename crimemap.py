@@ -1,3 +1,4 @@
+import json
 import dbconfig
 from flask import Flask, render_template, request
 
@@ -11,13 +12,11 @@ app = Flask(__name__)
 DB = DBHelper()
 
 @app.route("/")
+@app.route("/")
 def home():
-    try:
-        data = DB.get_all_inputs()
-    except Exception as e:
-        print e
-        data = None
-    return render_template("home.html", data=data)
+    crimes = DB.get_all_crimes()
+    crimes = json.dumps(crimes)
+    return render_template("home.html", crimes=crimes)
 
 @app.route("/add", methods=["POST"])
 def add():
