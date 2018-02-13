@@ -2,6 +2,7 @@ import json
 import datetime
 import dateparser
 import dbconfig
+import string
 from flask import Flask, render_template, request
 
 if dbconfig.test:
@@ -12,6 +13,10 @@ else:
 app = Flask(__name__)
 
 DB = DBHelper()
+
+def sanitize_string(userinput):
+    whitelist = string.letters + string.digits + " !?$.,;:-'()&"
+    return filter(lambda x: x in whitelist, userinput)
 
 def format_date(userdate):
     date = dateparser.parse(userdate)
@@ -62,6 +67,8 @@ def submitcrime():
     except ValueError:
         return home()
     description = request.form.get("description")
+    description = sanitize_string(request.form.get("description"))
+
     DB.add_crime(category, date, latitude, longitude, description)
     return home()
 
