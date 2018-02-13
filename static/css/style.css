@@ -25,6 +25,11 @@ input[type="submit"]:hover {
     height: 500px;
     float: left;
 }
+#error {
+color: red;
+}
+
+
 #newcrimeform {
     float: right;
     width: 25%;
